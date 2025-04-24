@@ -1,0 +1,9 @@
+[project]
+name = "aitools"
+version = "0.1.0"
+description = "Tools using LLM AI"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "langchain>=0.3.24",
+]
