@@ -17,7 +17,6 @@ OPENAI_API_BASE=https://yunwu.ai/v1
 
 激活虚拟环境。`.\.venv\Scripts\activate.ps1`
 
-初始化项目。`D:\apps\python313\Scripts\uv.exe init`
+安装依赖。`D:\apps\python313\Scripts\uv.exe sync`
 
-安装 langchain。`D:\apps\python313\Scripts\uv.exe add langchain`
 
