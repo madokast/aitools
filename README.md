@@ -1,5 +1,13 @@
 # ai-tools
+
 一些基于 AI 的工具
+
+## 准备 .env 文件
+
+```
+OPENAI_API_KEY=sk-
+OPENAI_API_BASE=https://yunwu.ai/v1
+```
 
 ## 初始化
 

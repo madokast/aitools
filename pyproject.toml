@@ -5,5 +5,6 @@ description = "Tools using LLM AI"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "langchain>=0.3.24",
+    "dotenv>=0.9.9",
+    "langchain[openai]>=0.3.24",
 ]
