@@ -2,6 +2,8 @@
 在 .env 配置
 OPENAI_API_KEY=sk-x
 OPENAI_API_BASE=https://
+
+脚本执行方法 python -m madokast.llm.test.test_openai
 """
 
 # 加载 .env 中的环境变量
@@ -24,7 +26,13 @@ messages = [
     HumanMessage(content="Translate this sentence from English to Chinese. I love programming.")
 ]
 
+new_system_message = SystemMessage(content="")
 for chunk in model.stream(messages):
-    print(chunk.content, end="", flush=True)
+    print(chunk.content, end="|", flush=True)
+    new_system_message.content += chunk.content
 
+print()
+print(new_system_message.content)
+
+messages.append(new_system_message)
 
