@@ -10,7 +10,11 @@ from langchain.chat_models import init_chat_model
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import HumanMessage, SystemMessage
 
+from madokast.utils.logging_init import logger
+
 class ChatBot(BaseModel):
+
+    # pydantic 配置，允许任意类型
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     # 模型提供商，例如 openai
@@ -28,8 +32,7 @@ class ChatBot(BaseModel):
     # 消息列表
     messages:List[HumanMessage|SystemMessage] = []
 
-    logger:Annotated[Optional[logging.Logger], BeforeValidator(lambda x:x)] = None
-
+    # 模型初始信息
     system_message:str = "You are a helpful assistant. You can help me by answering my questions. You can also ask me questions."
 
     @model_validator(mode='after')
@@ -49,8 +52,7 @@ class ChatBot(BaseModel):
             self.base_url = os.environ['API_BASE_URL']
         
         import madokast.utils.logging_init as _
-        self.logger = logging.getLogger(os.environ['PROJECT_NAME'])
-        self.logger.info(f"初始化模型 {self.model_provider} {self.model_name}")
+        logger.info(f"Create model {self.model_provider} {self.model_name}")
 
         extra = {}
         if self.base_url:

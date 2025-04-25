@@ -6,6 +6,7 @@ import sys
 from collections import OrderedDict
 from pydantic import BaseModel, model_validator, BeforeValidator
 from typing import Optional, Dict, Callable, Annotated, Any
+from madokast.utils.logging_init import logger
 
 class Command(BaseModel):
     """
@@ -49,10 +50,11 @@ class CLI(BaseModel):
         """
         初始化
         """
+        logger.debug("Init Cli")
         self.add_command(Command(
             full_name="help",
             abbr_name="h",
-            help="显示帮助",
+            help="show help",
             target=self.help
         ))
         return self
@@ -61,6 +63,7 @@ class CLI(BaseModel):
         """
         添加命令
         """
+        logger.debug(f"Add command {command}")
         self.full_cmd_dict[f"--{command.full_name}"] = command
         if command.abbr_name:
             self.abbr_cmd_dict[f"-{command.abbr_name}"] = command
@@ -91,6 +94,7 @@ class CLI(BaseModel):
         """
         运行
         """
+        logger.debug(f"Run cli {self.name}")
         if len(sys.argv) < 2:
             self.help()
             return
