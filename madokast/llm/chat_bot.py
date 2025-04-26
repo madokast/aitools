@@ -11,6 +11,8 @@ from langchain_core.messages import HumanMessage, SystemMessage
 
 from madokast.utils.logger import logger
 
+logger.debug("Load chat_bot.py")
+
 class ChatBot(BaseModel):
 
     # pydantic 配置，允许任意类型
