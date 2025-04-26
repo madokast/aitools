@@ -4,26 +4,31 @@
 
 import sys
 from collections import OrderedDict
-from pydantic import BaseModel, model_validator, BeforeValidator
-from typing import Optional, Dict, Annotated, Any
+from typing import Optional, Dict, Callable
 from madokast.utils.logger import logger
+from madokast.utils.env import PROJECT_NAME
 
-class Command(BaseModel):
+logger.debug("Load cli.py")
+
+class Command:
     """
     命令
     """
 
-    # 命令名字，例如 --help
-    full_name:str
-
-    # 命令缩写，例如 -h
-    abbr_name:Optional[str] = None
-
-    # 命令描述
-    help:Optional[str] = None
-
-    # 命令函数
-    target:Annotated[Any, BeforeValidator(lambda x: x)]
+    def __init__(self, full_name:str, target:Callable, 
+                 abbr_name:Optional[str] = None, help:Optional[str] = None):
+        """
+        构建命令
+        Args:
+            full_name (str): 命令全名
+            abbr_name (Optional[str], optional): 命令缩写. Defaults to None.
+            help (Optional[str], optional): 命令描述. Defaults to None.
+            target (Callable): 命令函数
+        """
+        self.full_name = full_name
+        self.abbr_name = abbr_name
+        self.help = help
+        self.target = target
 
     def __str__(self):
         return f"{self.full_name} {self.abbr_name} {self.help}"
@@ -32,25 +37,31 @@ class Command(BaseModel):
         return f"{self.full_name} {self.abbr_name}"
 
 
-class CLI(BaseModel):
+class CLI:
     """
     命令行交互
     """
 
-    # 命令名字
-    name:str = "ait"
+    def __init__(self, name:str = PROJECT_NAME, description:str = ""):
+        """
+        构建 CLI
+        Args:
+            name (str, optional): 名称. Defaults to PROJECT_NAME.
+            description (str, optional): 描述. Defaults to "".
+        """
+        self.name = name
+        self.description = description
 
-    # 命令描述
-    description:str = ""
+        # full 名称命令列表
+        self.full_cmd_dict:Dict[str, Command] = OrderedDict()
 
-    # full 名称命令列表
-    full_cmd_dict:Dict[str, Command] = OrderedDict()
+        # abbr 名称命令列表
+        self.abbr_cmd_dict:Dict[str, Command] = OrderedDict()
+        self.abbr_cmd_dict:Dict[str, Command] = OrderedDict()
 
-    # abbr 名称命令列表
-    abbr_cmd_dict:Dict[str, Command] = OrderedDict()
+        self.__init()
 
-    @model_validator(mode='after')
-    def init(self) -> 'CLI':
+    def __init(self) -> 'CLI':
         """
         初始化
         """
@@ -112,7 +123,7 @@ class CLI(BaseModel):
         args = sys.argv[2:]
         cmd = self.get_command_by_name(name)
         if not cmd:
-            print(f"command {name} not found")
+            logger.warning(f"command {name} not found")
             self.help()
             return
         

@@ -1,6 +1,6 @@
-from madokast.utils.logger import _ # init
+import madokast.utils.logger as _ # init
 from madokast.utils.cli import CLI, Command
-from madokast.llm.chat_bot import chat, chat_loop
+from madokast.llm.quick_chat import chat, chat_loop
 
 cli = CLI()
 cli.add_command(Command(

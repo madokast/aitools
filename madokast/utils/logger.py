@@ -1,19 +1,14 @@
 
-import os
 import logging
 
-# 加载 .env 中的环境变量
-from dotenv import load_dotenv
-load_dotenv()
-print("Load environment variables")
+from madokast.utils.env import LOGGER_LEVEL, PROJECT_NAME
 
-logger = logging.getLogger(os.environ['PROJECT_NAME'])
+logger = logging.getLogger(PROJECT_NAME)
 logger.setLevel(logging.DEBUG)
 
 if not logger.handlers:
     sh = logging.StreamHandler()
-
-    sh.setLevel(logging.DEBUG)
+    sh.setLevel(LOGGER_LEVEL)
     sh.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(pathname)s:%(lineno)d %(message)s"))
     
     logger.addHandler(sh)

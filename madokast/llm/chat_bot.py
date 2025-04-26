@@ -2,14 +2,13 @@
 最简单的命令行对话程序
 """
 
-import os
+from madokast.utils.logger import logger
+from madokast.utils.env import get_env
 from typing import List, Optional, NoReturn
 from pydantic import BaseModel, model_validator, ConfigDict
-from langchain.chat_models import init_chat_model
+
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import HumanMessage, SystemMessage
-
-from madokast.utils.logger import logger
 
 logger.debug("Load chat_bot.py")
 
@@ -44,20 +43,21 @@ class ChatBot(BaseModel):
         load_dotenv()
 
         if not self.model_provider:
-            self.model_provider = os.environ['MODEL_PROVIDER']
+            self.model_provider = get_env('MODEL_PROVIDER')
 
         if not self.model_name:
-            self.model_name = os.environ['MODEL_NAME']
+            self.model_name = get_env('MODEL_NAME')
 
         if not self.base_url:
-            self.base_url = os.environ['API_BASE_URL']
+            self.base_url = get_env('API_BASE_URL')
         
         logger.info(f"Create model {self.model_provider} {self.model_name}")
 
         extra = {}
         if self.base_url:
             extra['base_url'] = self.base_url
-
+            
+        from langchain.chat_models import init_chat_model
         self.model:BaseChatModel = init_chat_model(
             model=self.model_name,
             model_provider=self.model_provider,
@@ -75,20 +75,22 @@ class ChatBot(BaseModel):
         """
         对话
         """
+        logger.debug(f"User: {prompt}")
         self.messages.append(HumanMessage(content=prompt))
+        response = ""
         if stream_mode:
-            response = ""
             stream_consumer(stream_prefix)
             for chunk in self.model.stream(self.messages):
                 stream_consumer(chunk.content)
                 response += chunk.content
             stream_consumer('\n')
-            self.messages.append(SystemMessage(content=response))
-            return response
         else:
-            response = self.model.invoke(self.messages)
-            self.messages.append(SystemMessage(content=response.content))
-            return response.content
+            message = self.model.invoke(self.messages)
+            response = str(message.content)
+        
+        logger.debug(f"AI: {response}")
+        self.messages.append(SystemMessage(content=response))
+        return response
         
     def chat_loop(self) -> NoReturn:
         """
@@ -100,13 +102,4 @@ class ChatBot(BaseModel):
                 self.chat(prompt, stream_mode=True)
             except KeyboardInterrupt:
                 break
-
-
-def chat(prompt:str):
-    chat_bot = ChatBot()
-    chat_bot.chat(prompt)
-
-def chat_loop():
-    chat_bot = ChatBot()
-    chat_bot.chat_loop()
 
