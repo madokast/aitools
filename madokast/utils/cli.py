@@ -6,7 +6,7 @@ import sys
 from collections import OrderedDict
 from pydantic import BaseModel, model_validator, BeforeValidator
 from typing import Optional, Dict, Callable, Annotated, Any
-from madokast.utils.logging_init import logger
+from madokast.utils.logger import logger
 
 class Command(BaseModel):
     """

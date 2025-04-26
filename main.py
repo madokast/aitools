@@ -1,3 +1,4 @@
+from madokast.utils.logger import logger
 from madokast.utils.cli import CLI, Command
 from madokast.llm.chat_bot import chat, chat_loop
 

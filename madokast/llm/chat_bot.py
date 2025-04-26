@@ -9,7 +9,7 @@ from langchain.chat_models import init_chat_model
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import HumanMessage, SystemMessage
 
-from madokast.utils.logging_init import logger
+from madokast.utils.logger import logger
 
 class ChatBot(BaseModel):
 
@@ -50,7 +50,6 @@ class ChatBot(BaseModel):
         if not self.base_url:
             self.base_url = os.environ['API_BASE_URL']
         
-        import madokast.utils.logging_init as _
         logger.info(f"Create model {self.model_provider} {self.model_name}")
 
         extra = {}
