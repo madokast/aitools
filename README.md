@@ -5,18 +5,17 @@
 ## 准备 .env 文件
 
 ```
+PROJECT_NAME=aitools
+MODEL_PROVIDER=openai
+MODEL_NAME=gpt-4o
+API_BASE_URL=https://yunwu.ai/v1
 OPENAI_API_KEY=sk-
-OPENAI_API_BASE=https://yunwu.ai/v1
 ```
 
 ## 初始化
 
-安装 uv 包管理器。`D:\apps\python313\Scripts\pip.exe install uv`
+安装 uv 包管理器。`pip install uv`
 
-创建虚拟环境。`D:\apps\python313\Scripts\uv.exe venv`
+安装依赖。`uv sync`
 
-激活虚拟环境。`.\.venv\Scripts\activate.ps1`
-
-安装依赖。`D:\apps\python313\Scripts\uv.exe sync`
-
-
+运行。`uv run main.py`
