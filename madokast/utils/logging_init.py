@@ -14,7 +14,7 @@ if not logger.handlers:
     sh = logging.StreamHandler()
 
     sh.setLevel(logging.DEBUG)
-    sh.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(filename)s:%(lineno)d %(message)s"))
+    sh.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(pathname)s:%(lineno)d %(message)s"))
     
     logger.addHandler(sh)
 
