@@ -29,7 +29,11 @@ mcp_config = {
 
 print(f"mcp_config: {mcp_config}")
 
-@mcp.tool("Add new word", description="""添加一个新单词到笔记本中。传入单词原型 lemma 和 markdowm 形式的单词解释 explanation。
+@mcp.tool("Length", description="""获取单词的长度""")
+def length(word:str) -> str:
+    return str(len(word))
+
+@mcp.tool("New-Word", description="""添加一个新单词到笔记本中。传入单词原型 lemma 和 markdowm 形式的单词解释 explanation。
 其中单词解释由两部分组成，一个是单词的变形，一个是单词的含义和例句。
 单词的变形，对于动词来说是现在时态、过去时态和过去分词；对于名词来说是单数和复数；对于形容词来说是副词形式、比较级和最高级。
 这些变形，写在 `aliases:` 换行后面，用 markdowm 形式的无序列表中，并前后用 `---` 分隔。
@@ -67,13 +71,13 @@ aliases:
 def add(lemma:str, explanation:str) -> str:
     return add_word_markdowm(word=lemma, markdown=explanation)
 
-@mcp.tool("Get word inflections", description="""获取一个单词的所有变形。""")
-def get_word_inflections(lemma:str) -> List[str]:
+@mcp.tool("Inflections", description="""获取一个单词的所有变形。""")
+def get_word_inflections(lemma:str) -> str:
     all = set()
     forms = get_word_forms(lemma)
     for words in forms.values():
         all.update(words)
-    return list(all)
+    return ", ".join(all)
 
 if __name__ == "__main__":
     # print(get_word_inflections("abort"))
