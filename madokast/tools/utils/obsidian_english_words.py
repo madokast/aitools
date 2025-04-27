@@ -123,7 +123,7 @@ def get_word_markdowm(word:AnyEnglishWord) -> Optional[str]:
         return f.read()
 
 @print_exception
-def add_word_markdowm(word:AnyEnglishWord, markdown:str) -> str:
+def add_word_markdown(word:AnyEnglishWord, markdown:str) -> str:
     """
     添加单词的 markdown 内容
     如果单词已经存在，返回已有的内容

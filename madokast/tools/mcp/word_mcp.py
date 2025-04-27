@@ -4,10 +4,9 @@
 
 """
 
-from typing import List
 from mcp.server.fastmcp import FastMCP
-from word_forms.lemmatizer import get_word_forms
-from madokast.tools.utils.obsidian_english_words import add_word_markdowm
+from madokast.tools.utils.obsidian_english_words import add_word_markdown
+from madokast.tools.utils.english_inflections import get_english_inflections
 
 # 初始化 FastMCP server
 mcp = FastMCP("word")
@@ -27,7 +26,7 @@ mcp_config = {
     }
 }
 
-print(f"mcp_config: {mcp_config}")
+# print(f"mcp_config: {mcp_config}")
 
 @mcp.tool("New-Word", description="""添加一个新单词到笔记本中。传入单词原型 lemma 和单词解释 explanation。
 其中单词解释由两部分组成，一个是单词的变形，一个是单词的含义和例句。
@@ -65,17 +64,13 @@ aliases:
 - This project is a complete abortion.
 >>>>>""")
 def add(lemma:str, explanation:str) -> str:
-    return add_word_markdowm(word=lemma, markdown=explanation)
+    return add_word_markdown(word=lemma, markdown=explanation)
 
 @mcp.tool("Inflections", description="""获取一个单词的所有变形。""")
 def get_word_inflections(lemma:str) -> str:
-    all = set()
-    forms = get_word_forms(lemma)
-    for words in forms.values():
-        all.update(words)
-    return ", ".join(all)
+    inf = get_english_inflections(lemma)
+    return ", ".join(inf)
 
 if __name__ == "__main__":
-    # print(get_word_inflections("abort"))
     mcp.run(transport='stdio')
 
