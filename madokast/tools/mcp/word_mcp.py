@@ -40,7 +40,8 @@ async def meaning(word:str) -> str:
 
 @mcp.tool("Meanings", description="""获取单词的常见的含义和例句""")
 def meanings(word:str) -> str:
-    return get_english_meanings(word)
+    inf = get_word_inflections(word)
+    return f"inflections: {inf}\n\n{get_english_meanings(word)}"
 
 @mcp.tool("New-Word", description="""添加一个新单词到笔记本中。传入单词原型 lemma 和单词解释 explanation。
 其中单词解释由两部分组成，一个是单词的变形，一个是单词的含义和例句。
