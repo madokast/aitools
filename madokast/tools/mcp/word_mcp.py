@@ -28,6 +28,10 @@ mcp_config = {
 
 # print(f"mcp_config: {mcp_config}")
 
+@mcp.tool("Length", description="""获取单词的长度""")
+def length(word:str) -> str:
+    return str(len(word))
+
 @mcp.tool("New-Word", description="""添加一个新单词到笔记本中。传入单词原型 lemma 和单词解释 explanation。
 其中单词解释由两部分组成，一个是单词的变形，一个是单词的含义和例句。
 单词的变形，对于动词来说是现在时态、过去时态和过去分词；对于名词来说是单数和复数；对于形容词来说是副词形式、比较级和最高级。
