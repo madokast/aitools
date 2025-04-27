@@ -1,3 +1,7 @@
+"""
+获取单词的曲折变形
+"""
+
 from typing import List
 
 def get_english_inflections(word:str) -> List[str]:

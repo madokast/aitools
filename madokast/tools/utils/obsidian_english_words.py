@@ -52,7 +52,9 @@ from .print_exception import print_exception
 import tqdm
 
 # Obsidian 根目录
-Obsidian_Root_Dir = r"C:\Users\57856\Documents\GitHub\siyuan\obsidian"
+# Obsidian_Root_Dir = r"C:\Users\57856\Documents\GitHub\siyuan\obsidian"
+Obsidian_Root_Dir = r"C:\other_programs\siyuan\siyuan\obsidian"
+
 
 # 单词目录
 English_word_Dir = Path(Obsidian_Root_Dir).joinpath("Dict", "English")

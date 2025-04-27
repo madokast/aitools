@@ -6,7 +6,9 @@
 
 from mcp.server.fastmcp import FastMCP
 from madokast.tools.utils.obsidian_english_words import add_word_markdown
-from madokast.tools.utils.english_inflections import get_english_inflections
+from madokast.tools.utils.english_word.meanings import get_english_meanings
+from madokast.tools.utils.english_word.one_meaning import word_one_meaning_async
+from madokast.tools.utils.english_word.inflections import get_english_inflections
 
 # 初始化 FastMCP server
 mcp = FastMCP("word")
@@ -31,6 +33,14 @@ mcp_config = {
 @mcp.tool("Length", description="""获取单词的长度""")
 def length(word:str) -> str:
     return str(len(word))
+
+@mcp.tool("Meaning", description="""获取单词最常见的含义""")
+async def meaning(word:str) -> str:
+    return await word_one_meaning_async(word)
+
+@mcp.tool("Meanings", description="""获取单词的常见的含义和例句""")
+def meanings(word:str) -> str:
+    return get_english_meanings(word)
 
 @mcp.tool("New-Word", description="""添加一个新单词到笔记本中。传入单词原型 lemma 和单词解释 explanation。
 其中单词解释由两部分组成，一个是单词的变形，一个是单词的含义和例句。
