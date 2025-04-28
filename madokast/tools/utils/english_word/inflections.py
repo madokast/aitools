@@ -7,7 +7,7 @@ from typing import List
 def get_english_inflections(word:str) -> List[str]:
     from word_forms.lemmatizer import get_word_forms
     all_inf = set()
-    all_inf.add(word) # add the word itself
     for values in get_word_forms(word).values():
         all_inf |= values
+    all_inf.remove(word) # 去除原型
     return list(all_inf)

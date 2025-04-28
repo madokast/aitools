@@ -88,6 +88,8 @@ def add(lemma:str, explanation:str) -> str:
 @mcp.tool("Inflections", description="""获取一个单词的所有变形。""")
 def get_word_inflections(lemma:str) -> str:
     inf = get_english_inflections(lemma)
+    if len(inf) == 0:
+        return f"单词 {lemma} 没有变形"
     return ", ".join(inf)
 
 if __name__ == "__main__":
