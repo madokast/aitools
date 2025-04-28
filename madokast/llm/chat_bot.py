@@ -70,8 +70,16 @@ class ChatBot(BaseModel):
 
         return self
 
+    def clean_messages(self):
+        """
+        清理消息
+        """
+        self.messages = [
+            SystemMessage(content=self.system_message)
+        ]
+
     def chat(self, prompt:str, stream_mode:bool=True, stream_prefix:str='AI: ',
-              stream_consumer=lambda s:print(s, end='', flush=True)) -> str:
+              stream_consumer=lambda s:print(s, end='', flush=True), clean_messages:bool=False) -> str:
         """
         对话
         """
@@ -90,6 +98,8 @@ class ChatBot(BaseModel):
         
         logger.debug(f"AI: {response}")
         self.messages.append(SystemMessage(content=response))
+        if clean_messages:
+            self.clean_messages()
         return response
         
     def chat_loop(self) -> NoReturn:
