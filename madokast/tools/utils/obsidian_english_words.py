@@ -6,6 +6,7 @@ obsidian 英语单词相关工具
 内容为如下
 ##################################
 ---
+aliases:
 - {单词变形1}
 - {单词变形2}
 ---
@@ -107,12 +108,11 @@ def __init() -> Dict[AnyEnglishWord, BaseEnglishWord]:
     search_all_words(Temp_English_word_Dir, All_English_word)
 
 @print_exception
-def get_word_markdowm(word:AnyEnglishWord) -> Optional[str]:
+def get_word_markdown(word:AnyEnglishWord) -> Optional[str]:
     """
     获取单词的 markdown 内容
     """
-    if not All_English_word:
-        __init()
+    __init()
     base_english_word = All_English_word.get(word, None)
     if not base_english_word:
         base_english_word = New_English_word.get(word, None)
@@ -131,10 +131,9 @@ def add_word_markdown(word:AnyEnglishWord, markdown:str) -> str:
     如果单词已经存在，返回已有的内容
     如果单词不存在，返回添加成功
     """
-    if not All_English_word:
-        __init()
+    __init()
     if word in All_English_word:
-        content = get_word_markdowm(word)
+        content = get_word_markdown(word)
         return f"Word {word} already exists! The content is:\n{content}"
     # 写入文件内容
     file = Temp_English_word_Dir.joinpath(f"{word}.md")
@@ -142,9 +141,10 @@ def add_word_markdown(word:AnyEnglishWord, markdown:str) -> str:
         f.write(markdown)
     return f"Word {word} added!"
 
+
 if __name__ == "__main__":
     __init()
     for item in list(All_English_word.items())[:10]:
         print(item)
-        print(get_word_markdowm(item[0]))
+        print(get_word_markdown(item[0]))
 

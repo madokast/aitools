@@ -5,34 +5,38 @@
 """
 
 from mcp.server.fastmcp import FastMCP
-from madokast.tools.utils.obsidian_english_words import add_word_markdown
 from madokast.tools.utils.english_word.meanings import get_english_meanings
 from madokast.tools.utils.english_word.one_meaning import word_one_meaning_async
 from madokast.tools.utils.english_word.inflections import get_english_inflections
+from madokast.tools.utils.obsidian_english_words import add_word_markdown, get_word_markdown
 
 # 初始化 FastMCP server
 mcp = FastMCP("word")
 
-mcp_config = {
-    "mcpServers": {
-        "weather": {
-            "command": "uv",
-            "args": [
-                "--directory",
-                r"C:\Users\57856\Documents\GitHub\aitools",
-                "run",
-                "-m",
-                "madokast.tools.mcp.word_mcp",
-            ]
-        }
-    }
-}
-
+# mcp_config = {
+#     "mcpServers": {
+#         "weather": {
+#             "command": "uv",
+#             "args": [
+#                 "--directory",
+#                 r"C:\Users\57856\Documents\GitHub\aitools",
+#                 "run",
+#                 "-m",
+#                 "madokast.tools.mcp.word_mcp",
+#             ]
+#         }
+#     }
+# }
 # print(f"mcp_config: {mcp_config}")
 
-@mcp.tool("Length", description="""获取单词的长度""")
-def length(word:str) -> str:
-    return str(len(word))
+@mcp.tool("Check-Learned", description="""查看一个单词是否已经学习过""")
+def check_learned(word:str) -> str:
+    """检查一个单词是否已经学习过"""
+    md = get_word_markdown(word)
+    if md is None:
+        return f"单词 {word} 还没有学习过"
+    else:
+        return f"单词 {word} 已经学习过。笔记内容如下：\n{md}"
 
 @mcp.tool("Meaning", description="""获取单词最常见的含义""")
 async def meaning(word:str) -> str:
