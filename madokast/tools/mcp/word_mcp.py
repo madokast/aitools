@@ -8,7 +8,7 @@ from mcp.server.fastmcp import FastMCP
 from madokast.tools.utils.english_word.meanings import get_english_meanings
 from madokast.tools.utils.english_word.one_meaning import word_one_meaning_async
 from madokast.tools.utils.english_word.inflections import get_english_inflections
-from madokast.tools.utils.obsidian_english_words import add_word_markdown, get_word_markdown
+from madokast.tools.utils.english_word.obsidian_english_words import add_word_markdown, get_word_markdown
 
 # 初始化 FastMCP server
 mcp = FastMCP("word")

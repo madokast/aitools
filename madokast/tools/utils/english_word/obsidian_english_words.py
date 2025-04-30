@@ -49,7 +49,7 @@ aliases:
 from pathlib import Path
 from typing import Dict
 from typing import Optional
-from .print_exception import print_exception
+from ..print_exception import print_exception
 import tqdm
 
 # Obsidian 根目录
@@ -114,9 +114,9 @@ def get_word_markdown(word:AnyEnglishWord) -> Optional[str]:
     """
     __init()
     base_english_word = All_English_word.get(word, None)
-    if not base_english_word:
+    if word != base_english_word:
         base_english_word = New_English_word.get(word, None)
-        if not base_english_word:
+        if word != base_english_word:
             return None
 
     # 读取文件内容
