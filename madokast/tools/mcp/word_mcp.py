@@ -38,14 +38,14 @@ def check_learned(word:str) -> str:
     else:
         return f"单词 {word} 已经学习过。笔记内容如下：\n{md}"
 
-@mcp.tool("Meaning", description="""获取单词最常见的含义""")
-async def meaning(word:str) -> str:
-    return await word_one_meaning_async(word)
+# @mcp.tool("Meaning", description="""获取单词最常见的含义""")
+# async def one_meaning(word:str) -> str:
+#     return await word_one_meaning_async(word)
 
-@mcp.tool("Meanings", description="""获取单词的常见的含义和例句""")
+@mcp.tool("Meanings", description="""获取单词变形和常见的含义及其例句""")
 def meanings(word:str) -> str:
     inf = get_word_inflections(word)
-    return f"inflections: {inf}\n\n{get_english_meanings(word)}"
+    return f"单词变形: {inf}\n\n{get_english_meanings(word)}"
 
 @mcp.tool("New-Word", description="""添加一个新单词到笔记本中。传入单词原型 lemma 和单词解释 explanation。
 其中单词解释由两部分组成，一个是单词的变形，一个是单词的含义和例句。
@@ -85,7 +85,7 @@ aliases:
 def add(lemma:str, explanation:str) -> str:
     return add_word_markdown(word=lemma, markdown=explanation)
 
-@mcp.tool("Inflections", description="""获取一个单词的所有变形。""")
+# @mcp.tool("Inflections", description="""获取一个单词的所有变形。""")
 def get_word_inflections(lemma:str) -> str:
     inf = get_english_inflections(lemma)
     if len(inf) == 0:
