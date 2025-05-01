@@ -1,7 +1,35 @@
 """
-数学计算的 mcp，用于测试
+LLM 提示词
+帮用户学习单词，首先调用工具查找单词是否已经存在，存在则输出已有内容；否则，告诉我单词常见的含义和例句，按照 markdown 格式显示：
+```md
+中文含义1。
+- 英文例句1
+- 英文例句2
 
+中文含义2。
+- 英文例句3
+- 英文例句4
+```
 
+当询问到用户已经理解单词含义后，调用工具查询单词的曲折变形，然后添加到笔记中，格式如下
+```
+---
+aliases:
+- 变形1
+- 变形2
+---
+中文含义1。
+- 英文例句1
+- 英文例句2
+
+中文含义2。
+- 英文例句3
+- 英文例句4
+```
+
+注意不要将前后的三反引号 "````" 输入到笔记中。
+
+添加笔记成功后，告知用户，并在聊天中给出添加的完整的笔记内容。
 """
 
 from mcp.server.fastmcp import FastMCP
@@ -42,7 +70,7 @@ def check_learned(word:str) -> str:
 # async def one_meaning(word:str) -> str:
 #     return await word_one_meaning_async(word)
 
-@mcp.tool("Meanings", description="""获取单词变形和常见的含义及其例句""")
+# @mcp.tool("Meanings", description="""获取单词变形和常见的含义及其例句""")
 def meanings(word:str) -> str:
     inf = get_word_inflections(word)
     return f"单词变形: {inf}\n\n{get_english_meanings(word)}"
@@ -85,7 +113,7 @@ aliases:
 def add(lemma:str, explanation:str) -> str:
     return add_word_markdown(word=lemma, markdown=explanation)
 
-# @mcp.tool("Inflections", description="""获取一个单词的所有变形。""")
+@mcp.tool("Inflections", description="""获取一个单词的所有变形。""")
 def get_word_inflections(lemma:str) -> str:
     inf = get_english_inflections(lemma)
     if len(inf) == 0:
