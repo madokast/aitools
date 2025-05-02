@@ -5,6 +5,7 @@
 """
 
 from mcp.server.fastmcp import FastMCP
+from madokast.tools.utils.thread_synchronized import Synchronized
 from madokast.tools.utils.english_word.meanings import get_english_meanings
 from madokast.tools.utils.english_word.one_meaning import word_one_meaning_async
 from madokast.tools.utils.english_word.inflections import get_english_inflections
@@ -30,6 +31,7 @@ mcp = FastMCP("word")
 # print(f"mcp_config: {mcp_config}")
 
 @mcp.tool("Check-Learned", description="""查看一个单词是否已经学习过""")
+@Synchronized(key='obsidian')
 def check_learned(word:str) -> str:
     """检查一个单词是否已经学习过"""
     md = get_word_markdown(word)
@@ -82,6 +84,7 @@ aliases:
 失败。
 - This project is a complete abortion.
 >>>>>""")
+@Synchronized(key='obsidian')
 def add(lemma:str, explanation:str) -> str:
     return add_word_markdown(word=lemma, markdown=explanation)
 
