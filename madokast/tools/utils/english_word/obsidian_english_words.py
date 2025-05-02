@@ -53,8 +53,8 @@ from ..print_exception import print_exception
 import tqdm
 
 # Obsidian 根目录
-# Obsidian_Root_Dir = r"C:\Users\57856\Documents\GitHub\siyuan\obsidian"
-Obsidian_Root_Dir = r"C:\other_programs\siyuan\siyuan\obsidian"
+Obsidian_Root_Dir = r"C:\Users\57856\Documents\GitHub\siyuan\obsidian"
+# Obsidian_Root_Dir = r"C:\other_programs\siyuan\siyuan\obsidian"
 
 
 # 单词目录
@@ -134,12 +134,12 @@ def add_word_markdown(word:AnyEnglishWord, markdown:str) -> str:
     __init()
     if word in All_English_word:
         content = get_word_markdown(word)
-        return f"Word {word} already exists! The content is:\n{content}"
+        return f"单词 {word} 已存在:\n{content}"
     # 写入文件内容
     file = Temp_English_word_Dir.joinpath(f"{word}.md")
     with file.open("w", encoding="utf-8") as f:
         f.write(markdown)
-    return f"Word {word} added!"
+    return f"单词 {word} 成功添加"
 
 
 if __name__ == "__main__":
