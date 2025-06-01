@@ -48,7 +48,6 @@ aliases:
 
 from pathlib import Path
 from typing import Dict
-from typing import Optional
 from ..print_exception import print_exception
 import tqdm
 
@@ -74,12 +73,12 @@ All_English_word:Dict[AnyEnglishWord, BaseEnglishWord] = {}
 
 New_English_word:Dict[AnyEnglishWord, BaseEnglishWord] = {}
 
-def __init() -> Dict[AnyEnglishWord, BaseEnglishWord]:
+def __init() -> None:
     """
     获取所有的英文单词
     """
     if All_English_word:
-        return All_English_word
+        return # 如果已经初始化过了，就不再初始化
     
     def search_all_words(dir:Path, target:Dict[AnyEnglishWord, BaseEnglishWord]):
         # 查找 dir 下的所有文件
@@ -108,7 +107,7 @@ def __init() -> Dict[AnyEnglishWord, BaseEnglishWord]:
     search_all_words(Temp_English_word_Dir, All_English_word)
 
 @print_exception
-def get_word_markdown(word:AnyEnglishWord) -> Optional[str]:
+def get_word_markdown(word:AnyEnglishWord) -> str:
     """
     获取单词的 markdown 内容
     """
@@ -117,7 +116,7 @@ def get_word_markdown(word:AnyEnglishWord) -> Optional[str]:
     if word != base_english_word:
         base_english_word = New_English_word.get(word, None)
         if word != base_english_word:
-            return None
+            return f"单词 {word} 不存在"
 
     # 读取文件内容
     file = English_word_Dir.joinpath(f"{base_english_word}.md")

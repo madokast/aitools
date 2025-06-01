@@ -10,13 +10,13 @@ load_dotenv()
 
 __NOT_SET = object()
 
-def get_env(key, default=__NOT_SET):
+def get_env(key:str, default:object=__NOT_SET) -> str:
     value = os.environ.get(key, default)
     if value is __NOT_SET:
         raise ValueError(f"Environment variable {key} is not set")
-    return value
+    return str(value)
 
-PROJECT_NAME = get_env("PROJECT_NAME", "Madoka")
+PROJECT_NAME:str = str(get_env("PROJECT_NAME", "Madoka"))
 
-LOGGER_LEVEL = get_env("LOGGER_LEVEL", "INFO")
+LOGGER_LEVEL:str = str(get_env("LOGGER_LEVEL", "INFO"))
 

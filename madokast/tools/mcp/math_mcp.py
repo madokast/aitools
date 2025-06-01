@@ -10,7 +10,7 @@ from mcp.server.fastmcp import FastMCP
 # 初始化 FastMCP server
 mcp = FastMCP("math")
 
-mcp_config = {
+mcp_config = { # type: ignore
     "mcpServers": {
         "weather": {
             "command": "uv",
@@ -38,16 +38,16 @@ def add(a: str, b: str) -> str:
         return str(int(a) + int(b))
     
     try:
-        a = float(a)
-    except ValueError as e:
+        a_float = float(a)
+    except ValueError:
         return f"Invalid number: {a}"
 
     try:
-        b = float(b)
-    except ValueError as e:
+        b_float = float(b)
+    except ValueError:
         return f"Invalid number: {b}"
     
-    return str(a + b)
+    return str(a_float + b_float)
 
 @mcp.tool("multiply", description="Multiply two numbers")
 def multiply(a: str, b: str) -> str:
@@ -61,16 +61,16 @@ def multiply(a: str, b: str) -> str:
         return str(int(a) * int(b))
     
     try:
-        a = float(a)
-    except ValueError as e:
+        a_float = float(a)
+    except ValueError:
         return f"Invalid number: {a}"
 
     try:
-        b = float(b)
-    except ValueError as e:
+        b_float = float(b)
+    except ValueError:
         return f"Invalid number: {b}"
     
-    return str(a * b)
+    return str(a_float * b_float)
 
 if __name__ == "__main__":
     mcp.run(transport='stdio')

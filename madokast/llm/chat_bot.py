@@ -4,7 +4,7 @@
 
 from madokast.utils.logger import logger
 from madokast.utils.env import get_env
-from typing import List, Optional, NoReturn
+from typing import List, Optional, Callable
 from pydantic import BaseModel, model_validator, ConfigDict
 
 from langchain_core.language_models.chat_models import BaseChatModel
@@ -27,7 +27,7 @@ class ChatBot(BaseModel):
     base_url:Optional[str] = None
 
     # 模型
-    model:Optional[BaseChatModel] = None
+    chat_model:Optional[BaseChatModel] = None # type: ignore
 
     # 消息列表
     messages:List[HumanMessage|SystemMessage] = []
@@ -58,10 +58,10 @@ class ChatBot(BaseModel):
             extra['base_url'] = self.base_url
             
         from langchain.chat_models import init_chat_model
-        self.model:BaseChatModel = init_chat_model(
+        self.chat_model:BaseChatModel = init_chat_model(
             model=self.model_name,
             model_provider=self.model_provider,
-            **extra
+            **extra # type: ignore
         )
 
         self.messages = [
@@ -79,22 +79,22 @@ class ChatBot(BaseModel):
         ]
 
     def chat(self, prompt:str, stream_mode:bool=True, stream_prefix:str='AI: ',
-              stream_consumer=lambda s:print(s, end='', flush=True), clean_messages:bool=False) -> str:
+              stream_consumer:Callable[[str], None]=lambda s:print(s, end='', flush=True), clean_messages:bool=False) -> str:
         """
         对话
         """
         logger.debug(f"User: {prompt}")
         self.messages.append(HumanMessage(content=prompt))
-        response = ""
+        response:str = ""
         if stream_mode:
             stream_consumer(stream_prefix)
-            for chunk in self.model.stream(self.messages):
-                stream_consumer(chunk.content)
-                response += chunk.content
+            for chunk in self.chat_model.stream(self.messages):
+                stream_consumer(chunk.content) # type: ignore
+                response += str(chunk.content) # type: ignore
             stream_consumer('\n')
         else:
-            message = self.model.invoke(self.messages)
-            response = str(message.content)
+            message = self.chat_model.invoke(self.messages)
+            response = str(message.content) # type: ignore
         
         logger.debug(f"AI: {response}")
         self.messages.append(SystemMessage(content=response))
@@ -102,7 +102,7 @@ class ChatBot(BaseModel):
             self.clean_messages()
         return response
         
-    def chat_loop(self) -> NoReturn:
+    def chat_loop(self) -> None:
         """
         对话循环
         """

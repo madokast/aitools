@@ -15,7 +15,7 @@ class Command:
     命令
     """
 
-    def __init__(self, full_name:str, target:Callable, 
+    def __init__(self, full_name:str, target:Callable[..., None], 
                  abbr_name:Optional[str] = None, help:Optional[str] = None):
         """
         构建命令

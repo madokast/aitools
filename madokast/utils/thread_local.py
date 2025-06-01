@@ -5,7 +5,7 @@
 """
 
 import threading
-from typing import TypeVar, Callable, Generic
+from typing import TypeVar, Callable, Generic, List
 
 T = TypeVar('T')
 
@@ -21,7 +21,7 @@ class ThreadLocal(Generic[T]):
         return getattr(self.__local, name)
 
 if __name__ == '__main__':
-    threads = []
+    threads:List[threading.Thread] = []
     for i in range(10):
         t = threading.Thread(target=lambda: print(ThreadLocal(lambda: f"i")))
         threads.append(t)

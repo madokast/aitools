@@ -33,13 +33,11 @@ aliases:
 
 from mcp.server.fastmcp import FastMCP
 from madokast.tools.utils.thread_synchronized import Synchronized
-from madokast.tools.utils.english_word.meanings import get_english_meanings
-from madokast.tools.utils.english_word.one_meaning import word_one_meaning_async
 from madokast.tools.utils.english_word.inflections import get_english_inflections
 from madokast.tools.utils.english_word.obsidian_english_words import add_word_markdown, get_word_markdown
 
 # 初始化 FastMCP server
-mcp = FastMCP("word")
+mcp = FastMCP("word", host="0.0.0.0", port=8080)
 
 # mcp_config = {
 #     "mcpServers": {
@@ -67,14 +65,6 @@ def check_learned(word:str) -> str:
     else:
         return f"单词 {word} 已经学习过。笔记内容如下：\n{md}"
 
-# @mcp.tool("Meaning", description="""获取单词最常见的含义""")
-# async def one_meaning(word:str) -> str:
-#     return await word_one_meaning_async(word)
-
-# @mcp.tool("Meanings", description="""获取单词变形和常见的含义及其例句""")
-def meanings(word:str) -> str:
-    inf = get_word_inflections(word)
-    return f"单词变形: {inf}\n\n{get_english_meanings(word)}"
 
 @mcp.tool("Inflections", description="""获取一个单词的所有变形。""")
 def get_word_inflections(lemma:str) -> str:
