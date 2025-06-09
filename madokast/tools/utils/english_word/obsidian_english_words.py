@@ -52,7 +52,7 @@ from ..print_exception import print_exception
 import tqdm
 
 # Obsidian 根目录
-Obsidian_Root_Dir = r"C:\Users\57856\Documents\GitHub\siyuan\obsidian"
+Obsidian_Root_Dir = r"/mnt/c/Users/madokast/Documents/GitHub/siyuan/obsidian"
 # Obsidian_Root_Dir = r"C:\other_programs\siyuan\siyuan\obsidian"
 
 
@@ -80,28 +80,59 @@ def __init() -> None:
     if All_English_word:
         return # 如果已经初始化过了，就不再初始化
     
+    from concurrent.futures import ThreadPoolExecutor, as_completed
     def search_all_words(dir:Path, target:Dict[AnyEnglishWord, BaseEnglishWord]):
-        # 查找 dir 下的所有文件
-        for file in tqdm.tqdm(list(dir.glob("*.md"))):
-            # 文件名就是 BaseEnglishWord
+        """
+        并发查找 dir 下的所有文件
+        """
+        def search_file(file:Path) -> Dict[AnyEnglishWord, BaseEnglishWord]:
+            """
+            查找单个文件
+            """
             base_english_word = file.stem
-            All_English_word[base_english_word] = base_english_word
-            # 读取文件内容
+            result = {base_english_word: base_english_word}
             with file.open("r", encoding="utf-8") as f:
+                in_word_list = False
                 for line in f:
-                    # 读取单词的不同变形
-                    in_word_list = False
                     if line.startswith("---"):
                         if not in_word_list:
                             in_word_list = True
                         else:
                             break
-                    elif in_word_list:
-                        # 读取单词变形
-                        if line.startswith("-"):
-                            word = line.strip()[1:].strip()
-                            if word:
-                                target[word] = base_english_word
+                    elif in_word_list and line.startswith("-"):
+                        word = line.strip()[1:].strip()
+                        if word:
+                            result[word] = base_english_word
+            return result
+        # 查找 dir 下的所有文件
+        with ThreadPoolExecutor() as executor:
+            futures = {executor.submit(search_file, file): file for file in dir.glob("*.md")}
+            for future in tqdm.tqdm(as_completed(futures), total=len(futures), desc=f"Searching words in {dir}"):
+                result = future.result()
+                target.update(result)
+    
+    # def search_all_words(dir:Path, target:Dict[AnyEnglishWord, BaseEnglishWord]):
+    #     # 查找 dir 下的所有文件
+    #     for file in tqdm.tqdm(list(dir.glob("*.md"))):
+    #         # 文件名就是 BaseEnglishWord
+    #         base_english_word = file.stem
+    #         target[base_english_word] = base_english_word
+    #         # 读取文件内容
+    #         with file.open("r", encoding="utf-8") as f:
+    #             for line in f:
+    #                 # 读取单词的不同变形
+    #                 in_word_list = False
+    #                 if line.startswith("---"):
+    #                     if not in_word_list:
+    #                         in_word_list = True
+    #                     else:
+    #                         break
+    #                 elif in_word_list:
+    #                     # 读取单词变形
+    #                     if line.startswith("-"):
+    #                         word = line.strip()[1:].strip()
+    #                         if word:
+    #                             target[word] = base_english_word
 
     search_all_words(English_word_Dir, All_English_word)
     search_all_words(Temp_English_word_Dir, All_English_word)
