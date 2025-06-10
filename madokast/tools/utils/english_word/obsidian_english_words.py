@@ -47,7 +47,7 @@ aliases:
 """
 
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Optional
 from ..print_exception import print_exception
 import tqdm
 
@@ -105,9 +105,12 @@ def __init() -> None:
                             result[word] = base_english_word
             return result
         # 查找 dir 下的所有文件
+        all_files = list(dir.glob("*.md"))
+        if not all_files:
+            return
         with ThreadPoolExecutor() as executor:
-            futures = {executor.submit(search_file, file): file for file in dir.glob("*.md")}
-            for future in tqdm.tqdm(as_completed(futures), total=len(futures), desc=f"Searching words in {dir}"):
+            futures = [executor.submit(search_file, file) for file in all_files]
+            for future in tqdm.tqdm(as_completed(futures), total=len(futures), desc=f"Searched words in {dir}"):
                 result = future.result()
                 target.update(result)
     
@@ -138,7 +141,7 @@ def __init() -> None:
     search_all_words(Temp_English_word_Dir, All_English_word)
 
 @print_exception
-def get_word_markdown(word:AnyEnglishWord) -> str:
+def get_word_markdown(word:AnyEnglishWord) -> Optional[str]:
     """
     获取单词的 markdown 内容
     """
@@ -147,7 +150,7 @@ def get_word_markdown(word:AnyEnglishWord) -> str:
     if word != base_english_word:
         base_english_word = New_English_word.get(word, None)
         if word != base_english_word:
-            return f"单词 {word} 不存在"
+            return None
 
     # 读取文件内容
     file = English_word_Dir.joinpath(f"{base_english_word}.md")

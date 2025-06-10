@@ -69,7 +69,7 @@ mcp = FastMCP("word", host="0.0.0.0", port=8080)
 def check_learned(word:str) -> str:
     """检查一个单词是否已经学习过"""
     md = get_word_markdown(word)
-    if md is None:
+    if not md:
         return f"单词 {word} 还没有学习过"
     else:
         return f"单词 {word} 已经学习过。笔记内容如下：\n{md}"
