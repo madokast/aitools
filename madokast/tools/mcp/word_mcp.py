@@ -41,12 +41,13 @@ aliases:
 """
 
 from mcp.server.fastmcp import FastMCP
+from madokast.utils.env import get_env
 from madokast.tools.utils.thread_synchronized import Synchronized
 from madokast.tools.utils.english_word.inflections import get_english_inflections
 from madokast.tools.utils.english_word.obsidian_english_words import add_word_markdown, get_word_markdown
 
 # 初始化 FastMCP server
-mcp = FastMCP("word", host="0.0.0.0", port=8080)
+mcp = FastMCP("word", host="0.0.0.0", port=int(get_env("WORD_MCP_PORT")))
 
 # mcp_config = {
 #     "mcpServers": {
