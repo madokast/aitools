@@ -47,9 +47,8 @@ aliases:
 """
 
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, Optional, Tuple, List
 from ..print_exception import print_exception
-import tqdm
 
 # Obsidian 根目录
 Obsidian_Root_Dir = r"/mnt/c/Users/madokast/Documents/GitHub/siyuan/obsidian"
@@ -80,17 +79,19 @@ def __init() -> None:
     if All_English_word:
         return # 如果已经初始化过了，就不再初始化
     
-    from concurrent.futures import ThreadPoolExecutor, as_completed
+    import time
+    start = time.time()
+    from concurrent.futures import ThreadPoolExecutor
     def search_all_words(dir:Path, target:Dict[AnyEnglishWord, BaseEnglishWord]):
         """
         并发查找 dir 下的所有文件
         """
-        def search_file(file:Path) -> Dict[AnyEnglishWord, BaseEnglishWord]:
+        def search_file(file:Path) -> List[Tuple[AnyEnglishWord, BaseEnglishWord]]:
             """
             查找单个文件
             """
             base_english_word = file.stem
-            result = {base_english_word: base_english_word}
+            results = [(base_english_word, base_english_word)]
             with file.open("r", encoding="utf-8") as f:
                 in_word_list = False
                 for line in f:
@@ -102,17 +103,18 @@ def __init() -> None:
                     elif in_word_list and line.startswith("-"):
                         word = line.strip()[1:].strip()
                         if word:
-                            result[word] = base_english_word
-            return result
+                            results.append((word, base_english_word))
+            return results
         # 查找 dir 下的所有文件
         all_files = list(dir.glob("*.md"))
         if not all_files:
             return
         with ThreadPoolExecutor() as executor:
             futures = [executor.submit(search_file, file) for file in all_files]
-            for future in tqdm.tqdm(as_completed(futures), total=len(futures), desc=f"Searched words in {dir}"):
-                result = future.result()
-                target.update(result)
+            executor.shutdown(wait=True)
+            for future in futures:
+                results = future.result()
+                target.update(results)
     
     # def search_all_words(dir:Path, target:Dict[AnyEnglishWord, BaseEnglishWord]):
     #     # 查找 dir 下的所有文件
@@ -139,6 +141,9 @@ def __init() -> None:
 
     search_all_words(English_word_Dir, All_English_word)
     search_all_words(Temp_English_word_Dir, All_English_word)
+
+    end = time.time()
+    print(f"init word dict: {end - start:.2f} s")
 
 @print_exception
 def get_word_markdown(word:AnyEnglishWord) -> Optional[str]:
