@@ -27,11 +27,11 @@ def add_log(object: dict) -> str:
     """
     response = requests.post(f"http://{IP}:{PORT}/add", json=object, headers={"Content-Type": "application/json"})
     if response.status_code == 200:
-        return "Log added successfully."
+        return f"Log added successfully. {response.text}"
     else:
         return f"Failed to add log: {response.status_code} {response.reason}"
     
-@mcp.tool("query", description="Query life logs by SQL")
+@mcp.tool("query", description="Query life logs by SQL. The table name is daily_log")
 def query(sql: str) -> str:
     """
     查询人生日志
