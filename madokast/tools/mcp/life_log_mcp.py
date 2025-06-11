@@ -27,7 +27,7 @@ def add_log(object: dict) -> str:
     """
     response = requests.post(f"http://{IP}:{PORT}/add", json=object, headers={"Content-Type": "application/json"})
     if response.status_code == 200:
-        return f"Log added successfully. {response.text}"
+        return response.text
     else:
         return f"Failed to add log: {response.status_code} {response.reason}"
     
