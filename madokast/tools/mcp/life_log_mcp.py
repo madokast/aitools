@@ -2,6 +2,7 @@
 人生日志 MCP 服务
 """
 
+import json
 import requests
 from mcp.server.fastmcp import FastMCP
 from madokast.utils.env import get_env
@@ -16,7 +17,7 @@ PORT = 8000
 def describe() -> str:
     response = requests.post(f"http://{IP}:{PORT}/describe", json={}, headers={"Content-Type": "application/json"})
     if response.status_code == 200:
-        return response.text
+        return json.dumps(response.json(), ensure_ascii=False)
     else:
         return f"Failed to get description: {response.status_code} {response.reason}"
 
@@ -27,7 +28,7 @@ def add_log(object: dict) -> str:
     """
     response = requests.post(f"http://{IP}:{PORT}/add", json=object, headers={"Content-Type": "application/json"})
     if response.status_code == 200:
-        return response.text
+        return json.dumps(response.json(), ensure_ascii=False)
     else:
         return f"Failed to add log: {response.status_code} {response.reason}"
     
@@ -38,7 +39,7 @@ def query(sql: str) -> str:
     """
     response = requests.post(f"http://{IP}:{PORT}/query", json={"SQL": sql}, headers={"Content-Type": "application/sql"})
     if response.status_code == 200:
-        return response.text
+        return json.dumps(response.json(), ensure_ascii=False)
     else:
         return f"Failed to query logs: {response.status_code} {response.reason}"
 
