@@ -158,9 +158,14 @@ def get_word_markdown(word:AnyEnglishWord) -> Optional[str]:
             return None
 
     # 读取文件内容
-    file = English_word_Dir.joinpath(f"{base_english_word}.md")
-    with file.open("r", encoding="utf-8") as f:
-        return f.read()
+    try:
+        file = English_word_Dir.joinpath(f"{base_english_word}.md")
+        with file.open("r", encoding="utf-8") as f:
+            return f.read()
+    except:
+        file = Temp_English_word_Dir.joinpath(f"{base_english_word}.md")
+        with file.open("r", encoding="utf-8") as f:
+            return f.read()
 
 @print_exception
 def add_word_markdown(word:AnyEnglishWord, markdown:str) -> str:
@@ -170,13 +175,14 @@ def add_word_markdown(word:AnyEnglishWord, markdown:str) -> str:
     如果单词不存在，返回添加成功
     """
     __init()
-    if word in All_English_word:
+    if word in All_English_word or word in New_English_word:
         content = get_word_markdown(word)
         return f"单词 {word} 已存在:\n{content}"
     # 写入文件内容
     file = Temp_English_word_Dir.joinpath(f"{word}.md")
     with file.open("w", encoding="utf-8") as f:
         f.write(markdown)
+    New_English_word[word] = word
     return f"单词 {word} 成功添加"
 
 
