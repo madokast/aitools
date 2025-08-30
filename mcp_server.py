@@ -12,5 +12,5 @@ from madokast.tools.mcp.life_log_mcp import mcp as life_log_mcp
 #         tg.start_soon(life_log_mcp.run_sse_async)
 
 
-anyio.run(word_mcp.run_sse_async)
+anyio.run(word_mcp.run_streamable_http_async)
 
