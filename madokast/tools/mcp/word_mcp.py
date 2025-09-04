@@ -76,14 +76,14 @@ def check_learned(word:str) -> str:
         return f"单词 {word} 已经学习过。笔记内容如下：\n{md}"
 
 
-@mcp.tool("Inflections", description="""获取一个单词的所有变形。""")
+@mcp.tool("Get-Inflections", description="""获取一个单词的所有变形。""")
 def get_word_inflections(lemma:str) -> str:
     inf = get_english_inflections(lemma)
     if len(inf) == 0:
         return f"单词 {lemma} 没有变形"
     return ", ".join(inf)
 
-@mcp.tool("New-Word", description="""添加一个新单词到笔记本中。传入单词原型 lemma 和单词解释 explanation。
+@mcp.tool("Add-Word", description="""添加一个新单词到笔记本中。传入单词原型 lemma 和单词解释 explanation。
 其中单词解释由两部分组成，一个是单词的变形，一个是单词的含义和例句。
 单词的变形，对于动词来说是现在时态、过去时态和过去分词；对于名词来说是单数和复数；对于形容词来说是副词形式、比较级和最高级。
 这些变形，写在 `aliases:` 换行后面，用 markdown 形式的无序列表中，并前后用 `---` 分隔。
