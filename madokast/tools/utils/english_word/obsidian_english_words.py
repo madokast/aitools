@@ -51,8 +51,8 @@ from typing import Dict, Optional, Tuple, List
 from ..print_exception import print_exception
 
 # Obsidian 根目录
-Obsidian_Root_Dir = r"/mnt/c/Users/madokast/Documents/GitHub/siyuan/obsidian"
-# Obsidian_Root_Dir = r"C:\other_programs\siyuan\siyuan\obsidian"
+# Obsidian_Root_Dir = r"/mnt/c/Users/madokast/Documents/GitHub/siyuan/obsidian"
+Obsidian_Root_Dir = r"C:\other_programs\siyuan\siyuan\obsidian"
 
 
 # 单词目录
@@ -175,8 +175,8 @@ def add_word_markdown(word:AnyEnglishWord, markdown:str) -> str:
     如果单词不存在，返回添加成功
     """
     __init()
-    if word in All_English_word or word in New_English_word:
-        content = get_word_markdown(word)
+    content = get_word_markdown(word)
+    if content:
         return f"单词 {word} 已存在:\n{content}"
     # 写入文件内容
     file = Temp_English_word_Dir.joinpath(f"{word}.md")
