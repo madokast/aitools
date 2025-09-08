@@ -7,7 +7,10 @@ from typing import List, Set
 def get_english_inflections(word:str) -> List[str]:
     from word_forms.lemmatizer import get_word_forms # type: ignore
     all_inf:Set[str] = set()
-    form_words = get_word_forms(word)
+    try:
+        form_words = get_word_forms(word)
+    except:
+        return []
     if not form_words:
         return []
     for values in form_words.values(): # type: ignore
