@@ -15,5 +15,8 @@ def get_english_inflections(word:str) -> List[str]:
         return []
     for values in form_words.values(): # type: ignore
         all_inf |= values
-    all_inf.remove(word) # 去除原型
+    if word in all_inf: all_inf.remove(word) # 去除原型
     return list(all_inf)
+
+if __name__ == '__main__':
+    print(get_english_inflections("Switzerland"))
