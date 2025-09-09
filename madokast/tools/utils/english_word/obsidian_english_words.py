@@ -68,14 +68,19 @@ EnglishWord = str
 # 所有的单词，加上 .md 可以得到单词的路径
 All_English_word:Set[EnglishWord] = set()
 
+Last_Init_time = 0
+
 def __init() -> None:
     """
     获取所有的英文单词
     """
-    if All_English_word:
-        return # 如果已经初始化过了，就不再初始化
-    
     import time
+    Last_Init_time = time.time()
+    if All_English_word:
+        # 如果距离上一次初始化时间小于 10 分钟，就不再初始化
+        if time.time() - Last_Init_time < 10 * 60: # 10 分钟
+            return
+        All_English_word = set()
     start = time.time()
 
     for file in English_word_Dir.glob("*.md"):
