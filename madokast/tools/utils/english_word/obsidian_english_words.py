@@ -46,6 +46,7 @@ aliases:
 - uv --directory C:\Users\57856\Documents\GitHub\aitools\madokast\tools\utils run obsidian_english_words.py
 """
 
+import time
 import logging
 from pathlib import Path
 from typing import Set, Optional, Tuple, List
@@ -74,8 +75,8 @@ def __init() -> None:
     """
     获取所有的英文单词
     """
-    import time
-    Last_Init_time = time.time()
+    global All_English_word
+    global Last_Init_time
     if All_English_word:
         # 如果距离上一次初始化时间小于 10 分钟，就不再初始化
         if time.time() - Last_Init_time < 10 * 60: # 10 分钟
@@ -89,6 +90,7 @@ def __init() -> None:
         All_English_word.add(file.stem)
 
     end = time.time()
+    Last_Init_time = time.time()
     logging.info(f"init word dict: {end - start:.2f} s")
 
 @print_exception
