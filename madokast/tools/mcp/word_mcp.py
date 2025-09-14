@@ -1,43 +1,48 @@
 """
-帮用户学习单词，首先调用工具查找单词是否已经存在，存在则输出已有内容；否则，请思考单词的含义含义和例句，按照 markdown 格式分条显示单词的中文含义和英文例句：
-```md
-中文含义1。
-- 英文例句1
-- 英文例句2
+You are a Enlish teacher. User is a Chinese student and now is learning English vocabulary with you.
 
-中文含义2。
-- 英文例句3
-- 英文例句4
+The user will give you an English word, and you will help the user learn the word in the following steps:
+
+First, you should check if the word has already been learned by calling the tool `Check-Learned`.
+
+If the word has been learned, output the existing content to the user and tell the user that the word has already been learned.
+
+If the word has not been learned, you should call tool `Get-Inflections` to get the inflections of the word.
+
+Then, you should think about the Chinese meaning and example sentences of the word.
+
+And then you should output these in markdown format to user's notebook by calling the tool `Add-Word`.
+
+The markdown content flollows the format below:
+```md
+---
+aliases:
+- inflection1
+- inflection2
+- and so on
+---
+Chinese meaning 1.
+- example sentence1
+- example sentence2
+
+Chinese meaning 2.
+- example sentence3
+- example sentence4
 ```
 
-例如单词 abortion 的含义和例句可以是：
-```md
+For exmample, the inflections, meaning and example sentences of the word "abortion" can be:
+aliases:
+- abortions
+---
 堕胎。
 - Abortion is restricted in some American states.
 
 失败。
 - This project is a complete abortion.
-```
 
-然后询问到用户是否已经理解单词，如果用户没有明确回答，请解答用户的问题，直到用户说已经理解，这时调用工具查询单词的曲折变形，然后利用工具将笔记添加到笔记中，格式如下
-```
----
-aliases:
-- 变形1
-- 变形2
----
-中文含义1。
-- 英文例句1
-- 英文例句2
+Notice the surrounding triple backticks "```md" and "```" should not be included in the note.
 
-中文含义2。
-- 英文例句3
-- 英文例句4
-```
-
-注意不要将前后的三反引号 "````" 输入到笔记中。
-
-添加笔记成功后，告知用户，并在聊天中给出添加的完整的笔记内容。
+When you have successfully added the note, inform the user and provide the complete content of the added note in the chat.
 """
 
 from mcp.server.fastmcp import FastMCP
@@ -65,37 +70,40 @@ mcp = FastMCP("word", host="0.0.0.0", port=int(get_env("WORD_MCP_PORT")))
 # }
 # print(f"mcp_config: {mcp_config}")
 
-@mcp.tool("Check-Learned", description="""查看一个单词是否已经学习过""")
+@mcp.tool("Check-Learned", description="""Check if a word has been learned. If learned, return the content of the note; if not learned, return a message indicating it has not been learned.""")
 @Synchronized(key='obsidian')
 def check_learned(word:str) -> str:
-    """检查一个单词是否已经学习过"""
     md = get_word_markdown(word)
     if not md:
-        return f"单词 {word} 还没有学习过"
+        return f"Word {word} has not been learned."
     else:
-        return f"单词 {word} 已经学习过。笔记内容如下：\n{md}"
+        return f"Word {word} has been learned. Here is the content:\n{md}"
 
 
-@mcp.tool("Get-Inflections", description="""获取一个单词的所有变形。""")
+@mcp.tool("Get-Inflections", description="""Get the inflections of a word. For example, for the verb 'run', the inflections include 'runs', 'running', 'ran'. For the noun 'cat', the inflection is 'cats'. For the adjective 'happy', the inflections include 'happier', 'happiest', 'happily'. Return the inflections as a comma-separated string. If there are no inflections, return a message indicating that.""")
 def get_word_inflections(lemma:str) -> str:
     inf = get_english_inflections(lemma)
     if len(inf) == 0:
-        return f"单词 {lemma} 没有变形"
+        return f"Word {lemma} has no inflections."
     return ", ".join(inf)
 
-@mcp.tool("Add-Word", description="""添加一个新单词到笔记本中。传入单词原型 word 和单词解释 explanation。
-其中单词解释由两部分组成，一个是单词的变形，一个是单词的含义和例句。
-单词的变形，对于动词来说是现在时态、过去时态和过去分词；对于名词来说是单数和复数；对于形容词来说是副词形式、比较级和最高级。
-这些变形，写在 `aliases:` 换行后面，用 markdown 形式的无序列表中，并前后用 `---` 分隔。
-如果单词的变形和单词原型相同，则不用列出，例如 read 的过去式和过去分词都不用列出。
-这些变形，如果有相同的，只需要列出一次。有些变形可能不存在，例如 unique 的比较级和最高级不存在，不用列出。
-在 `---` 分隔符号后，尽可能简短地写出单词的含义，之后换行在用无序列表的形式写出1个例句。
-如果单词的含义不止一个，则换行两次，继续写出下一个含义和例句。
-从最常用的含义开始写，生僻的含义不用写出。
-下面给出一些例子，例子位于 `>>>>>` 和 `<<<<<` 之间。
+@mcp.tool("Add-Word", description="""Add a new word to the notebook. Provide the word's lemma and its explanation.
+          
+The content of the explanation consists of two parts: the inflections of the word, and the meanings and example sentences of the word.
+
+The inflections of the word are obtained by calling the tool `Get-Inflections`. 
+
+Write the inflections in a markdown unordered list after `aliases:`, and separate this section with `---` before and after.
+
+After the `---` separator, write the Chinese meanings of the word as concisely as possible, followed by example sentences in an unordered list.          
+          
+If the word has multiple meanings, write each meaning followed by its example sentences in an unordered list.
+
+Here is an example of the explanation content surrounded by `>>>>>` and `<<<<<`:
+
 >>>>> 
-单词原型 word: abort
-单词解释 explanation:
+word: abrupt
+explanation:
 ---
 aliases:
 - abruptly
@@ -104,10 +112,11 @@ aliases:
 - His abrupt departure is bound to raise questions.
 <<<<<<
 
-下面是另一个例子
+And here is a more complete example surrounded by >>>>> and <<<<<. You should follow this format.
+
 >>>>> 
-单词原型 word: abort
-单词解释 explanation:
+word: abort
+explanation:
 ---
 aliases:
 - abortions
@@ -117,7 +126,8 @@ aliases:
 
 失败。
 - This project is a complete abortion.
->>>>>""")
+>>>>>
+""")
 @Synchronized(key='obsidian')
 def add(word:str, explanation:str) -> str:
     return add_word_markdown(word=word, markdown=explanation)

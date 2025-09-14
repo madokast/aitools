@@ -54,7 +54,7 @@ from ..print_exception import print_exception
 
 # Obsidian 根目录
 # Obsidian_Root_Dir = r"/mnt/c/Users/madokast/Documents/GitHub/siyuan/obsidian"
-Obsidian_Root_Dir = r"C:\other_programs\siyuan\siyuan\obsidian"
+Obsidian_Root_Dir = r"C:\Users\madokast\Documents\siyuan\obsidian"
 
 
 # 单词目录
