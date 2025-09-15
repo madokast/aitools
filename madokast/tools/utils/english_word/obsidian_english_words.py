@@ -54,7 +54,7 @@ from ..print_exception import print_exception
 
 # Obsidian 根目录
 # Obsidian_Root_Dir = r"/mnt/c/Users/madokast/Documents/GitHub/siyuan/obsidian"
-Obsidian_Root_Dir = r"C:\Users\madokast\Documents\siyuan\obsidian"
+Obsidian_Root_Dir = r"C:\other_programs\siyuan\siyuan\obsidian"
 
 
 # 单词目录
@@ -91,7 +91,7 @@ def __init() -> None:
 
     end = time.time()
     Last_Init_time = time.time()
-    logging.info(f"init word dict: {end - start:.2f} s")
+    logging.info(f"init word dict: {end - start:.2f}s and {len(All_English_word)} words")
 
 @print_exception
 def get_word_markdown(word:EnglishWord) -> Optional[str]:
@@ -124,13 +124,15 @@ def add_word_markdown(word:EnglishWord, markdown:str) -> str:
     __init()
     content = get_word_markdown(word)
     if content:
-        return f"单词 {word} 已存在:\n{content}"
+        return f"word {word} already exists: {content}"
     # 写入文件内容
     file = Temp_English_word_Dir.joinpath(f"{word}.md")
     with file.open("w", encoding="utf-8") as f:
         f.write(markdown)
     All_English_word.add(word)
-    return f"单词 {word} 成功添加"
+    content = get_word_markdown(word)
+    assert content
+    return f"word {word} added successfully: {content}"
 
 
 if __name__ == "__main__":
