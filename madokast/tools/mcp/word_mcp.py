@@ -13,7 +13,7 @@ Then, you should think about the Chinese meaning and example sentences of the wo
 
 And then you should output these in markdown format to user's notebook by calling the tool `Add-Word`.
 
-The markdown content flollows the format below:
+The markdown content follows the format below:
 ```md
 ---
 aliases:
@@ -30,7 +30,7 @@ Chinese meaning 2.
 - example sentence4
 ```
 
-For exmample, the inflections, meaning and example sentences of the word "abortion" can be:
+For example, the inflections, meaning and example sentences of the word "abortion" can be:
 aliases:
 - abortions
 ---
